@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:059f0d56d1b1475a64d58393639347ad:6024e98aa6db17b845a02272b005daf5:095174e8640acbf00a0740c97dd03235$ -->
+<!--Format:
+n  => name of the sprite
+x  => sprite x pos in texture
+y  => sprite y pos in texture
+w  => sprite width (may be trimmed)
+h  => sprite height (may be trimmed)
+oX => sprite's x-corner offset (only available if trimmed)
+oY => sprite's y-corner offset (only available if trimmed)
+oW => sprite's original width (only available if trimmed)
+oH => sprite's original height (only available if trimmed)
+r => 'y' only set if sprite is rotated
+-->
+<TextureAtlas imagePath="data/the_only_way_is_up_0.png" width="2048" height="2048">
+    <sprite n="bg_00.png" x="2" y="2" w="720" h="1280"/>
+    <sprite n="bg_01.png" x="932" y="2" w="720" h="1280"/>
+    <sprite n="body_00.png" x="1978" y="124" w="68" h="96"/>
+    <sprite n="body_01.png" x="2" y="1976" w="68" h="68"/>
+    <sprite n="border_b_00.png" x="2" y="1284" w="720" h="408"/>
+    <sprite n="border_l_00.png" x="724" y="2" w="180" h="1280"/>
+    <sprite n="border_r_00.png" x="1654" y="2" w="180" h="1280"/>
+    <sprite n="btn_restart_00.png" x="1836" y="124" w="140" h="100"/>
+    <sprite n="btn_start_00.png" x="772" y="1832" w="140" h="48"/>
+    <sprite n="chain_metal_00.png" x="2010" y="2" w="32" h="72"/>
+    <sprite n="chain_rope_00.png" x="308" y="1966" w="8" h="20"/>
+    <sprite n="char_die_00.png" x="326" y="1892" w="92" h="122"/>
+    <sprite n="char_die_01.png" x="604" y="1694" w="92" h="122"/>
+    <sprite n="char_die_02.png" x="698" y="1694" w="92" h="122"/>
+    <sprite n="char_die_03.png" x="838" y="1882" w="92" h="122"/>
+    <sprite n="char_die_04.png" x="1836" y="226" w="92" h="122"/>
+    <sprite n="char_hit_00.png" x="1930" y="320" w="92" h="122"/>
+    <sprite n="char_hit_01.png" x="1836" y="350" w="92" h="122"/>
+    <sprite n="char_struggle_00.png" x="1930" y="444" w="92" h="122"/>
+    <sprite n="char_struggle_01.png" x="1836" y="474" w="92" h="122"/>
+    <sprite n="char_struggle_02.png" x="1930" y="568" w="92" h="122"/>
+    <sprite n="char_swim_00.png" x="1836" y="598" w="92" h="122"/>
+    <sprite n="char_swim_01.png" x="1930" y="692" w="92" h="122"/>
+    <sprite n="char_swim_02.png" x="1836" y="722" w="92" h="122"/>
+    <sprite n="char_swim_03.png" x="1930" y="816" w="92" h="122"/>
+    <sprite n="char_swim_04.png" x="1836" y="846" w="92" h="122"/>
+    <sprite n="char_swim_05.png" x="1930" y="940" w="92" h="122"/>
+    <sprite n="char_swim_06.png" x="1836" y="970" w="92" h="122"/>
+    <sprite n="char_swim_07.png" x="1930" y="1064" w="92" h="122"/>
+    <sprite n="gfx_air_bg_00.png" x="142" y="2034" w="308" h="12"/>
+    <sprite n="gfx_air_fill_00.png" x="604" y="1818" w="308" h="12"/>
+    <sprite n="gfx_air_text_00.png" x="454" y="1856" w="316" h="32"/>
+    <sprite n="gfx_end_00.png" x="228" y="1694" w="224" h="196"/>
+    <sprite n="gfx_logo_00.png" x="2" y="1694" w="224" h="280"/>
+    <sprite n="object_anchor_00.png" x="454" y="1694" w="148" h="160"/>
+    <sprite n="object_barrel_00.png" x="1978" y="222" w="68" h="96"/>
+    <sprite n="object_barrel_01.png" x="72" y="1976" w="68" h="68"/>
+    <sprite n="object_case_00.png" x="258" y="1988" w="40" h="36"/>
+    <sprite n="object_case_01.png" x="258" y="1966" w="48" h="20"/>
+    <sprite n="object_case_02.png" x="228" y="1892" w="96" h="72"/>
+    <sprite n="object_crate_00.png" x="142" y="1976" w="56" h="56"/>
+    <sprite n="object_crate_01.png" x="200" y="1976" w="56" h="56"/>
+    <sprite n="object_panel_00.png" x="1836" y="2" w="172" h="120"/>
+    <sprite n="object_propeller_00.png" x="452" y="1892" w="384" h="148"/>
+</TextureAtlas>

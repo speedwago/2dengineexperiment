@@ -1,0 +1,203 @@
+\hypertarget{class_game_logic}{\section{Game\-Logic Class Reference}
+\label{class_game_logic}\index{Game\-Logic@{Game\-Logic}}
+}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries Game\-State} \{ \\*
+{\bfseries W\-A\-I\-T\-\_\-\-F\-O\-R\-\_\-\-U\-S\-E\-R}, 
+{\bfseries S\-W\-A\-P\-P\-I\-N\-G}, 
+{\bfseries F\-A\-D\-I\-N\-G}, 
+{\bfseries F\-A\-L\-L\-I\-N\-G}, 
+\\*
+{\bfseries C\-H\-E\-C\-K\-I\-N\-G}, 
+{\bfseries C\-H\-E\-C\-K\-I\-N\-G\-\_\-\-F\-O\-U\-N\-D}, 
+{\bfseries C\-H\-E\-C\-K\-I\-N\-G\-\_\-\-F\-A\-L\-L\-I\-N\-G}, 
+{\bfseries C\-H\-E\-C\-K\-I\-N\-G\-\_\-\-G\-R\-A\-V\-I\-T\-Y}, 
+\\*
+{\bfseries C\-H\-E\-C\-K\-I\-N\-G\-\_\-\-S\-W\-A\-P}, 
+{\bfseries G\-A\-M\-E\-\_\-\-O\-V\-E\-R}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_game_logic_a996cd781691c36922e7ce792fcb21640}{\hyperlink{class_game_logic_a996cd781691c36922e7ce792fcb21640}{Game\-Logic} ()}\label{class_game_logic_a996cd781691c36922e7ce792fcb21640}
+
+\begin{DoxyCompactList}\small\item\em structors \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a63a7acf778535b5f74d469de2cd39b16}{\hyperlink{class_game_logic_a63a7acf778535b5f74d469de2cd39b16}{$\sim$\-Game\-Logic} ()}\label{class_game_logic_a63a7acf778535b5f74d469de2cd39b16}
+
+\begin{DoxyCompactList}\small\item\em brief deconstructor \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_ad81dfbe0828fde579f4ea141593dfdcf}{void \hyperlink{class_game_logic_ad81dfbe0828fde579f4ea141593dfdcf}{Init} ()}\label{class_game_logic_ad81dfbe0828fde579f4ea141593dfdcf}
+
+\begin{DoxyCompactList}\small\item\em init the game logic \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a400a37d0408e6032e04cc9fb2ad1447e}{void \hyperlink{class_game_logic_a400a37d0408e6032e04cc9fb2ad1447e}{Update} (float dt)}\label{class_game_logic_a400a37d0408e6032e04cc9fb2ad1447e}
+
+\begin{DoxyCompactList}\small\item\em update \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_aed261149fb612d29346ff2e18bf85b8d}{void \hyperlink{class_game_logic_aed261149fb612d29346ff2e18bf85b8d}{Update\-User\-Input} ()}\label{class_game_logic_aed261149fb612d29346ff2e18bf85b8d}
+
+\begin{DoxyCompactList}\small\item\em read user input \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a546c524265b0af4a374b4d04694f902c}{void \hyperlink{class_game_logic_a546c524265b0af4a374b4d04694f902c}{Update\-Checking} ()}\label{class_game_logic_a546c524265b0af4a374b4d04694f902c}
+
+\begin{DoxyCompactList}\small\item\em read user input \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a97ea86d882696b29db897a2437b0ede3}{void \hyperlink{class_game_logic_a97ea86d882696b29db897a2437b0ede3}{Update\-Interpolators} (float dt)}\label{class_game_logic_a97ea86d882696b29db897a2437b0ede3}
+
+\begin{DoxyCompactList}\small\item\em update the interpolator list \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a238affbc72e0f37a44721466616ab4d7}{void \hyperlink{class_game_logic_a238affbc72e0f37a44721466616ab4d7}{Update\-Timers} (float dt)}\label{class_game_logic_a238affbc72e0f37a44721466616ab4d7}
+
+\begin{DoxyCompactList}\small\item\em update the timer list \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_af03f3566b70ec7b3a69dca8c27b59dcc}{void \hyperlink{class_game_logic_af03f3566b70ec7b3a69dca8c27b59dcc}{Shutdown} ()}\label{class_game_logic_af03f3566b70ec7b3a69dca8c27b59dcc}
+
+\begin{DoxyCompactList}\small\item\em shutdown system \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a27fda434e0476678c8dcaf320b5b0f79}{Game\-State \hyperlink{class_game_logic_a27fda434e0476678c8dcaf320b5b0f79}{Get\-Current\-State} () const }\label{class_game_logic_a27fda434e0476678c8dcaf320b5b0f79}
+
+\begin{DoxyCompactList}\small\item\em gets the current state \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_ac40d6698b0cad9a53df29d6152f27fe4}{const \hyperlink{class_game_board}{Game\-Board} \& \hyperlink{class_game_logic_ac40d6698b0cad9a53df29d6152f27fe4}{Get\-Board} () const }\label{class_game_logic_ac40d6698b0cad9a53df29d6152f27fe4}
+
+\begin{DoxyCompactList}\small\item\em return the board \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a4042ff7e0b73cbe2e7fe45ed17cdc51d}{\hyperlink{class_game_board}{Game\-Board} \& \hyperlink{class_game_logic_a4042ff7e0b73cbe2e7fe45ed17cdc51d}{Get\-Board} ()}\label{class_game_logic_a4042ff7e0b73cbe2e7fe45ed17cdc51d}
+
+\begin{DoxyCompactList}\small\item\em non const get board \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_aab1d9bd357ee71541d4faf9dea5a4b40}{bool \hyperlink{class_game_logic_aab1d9bd357ee71541d4faf9dea5a4b40}{Find\-Combos} ()}\label{class_game_logic_aab1d9bd357ee71541d4faf9dea5a4b40}
+
+\begin{DoxyCompactList}\small\item\em used to check all the combos, it fire an animation. \end{DoxyCompactList}\item 
+void \hyperlink{class_game_logic_a6519d0f7ccd9424c3595cfc3a63b5e8e}{Apply\-Gravity} (\hyperlink{struct_game_board_1_1_match_result}{Game\-Board\-::\-Match\-Result} $\ast$p\-Res, bool useanim=true)
+\begin{DoxyCompactList}\small\item\em make the object fall \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_ad0dcf5b5afb73b8ca5eecd04a0f8fa29}{const \hyperlink{struct_sprite}{Sprite} \& \hyperlink{class_game_logic_ad0dcf5b5afb73b8ca5eecd04a0f8fa29}{Get\-Sprite} (unsigned int col, unsigned int row) const }\label{class_game_logic_ad0dcf5b5afb73b8ca5eecd04a0f8fa29}
+
+\begin{DoxyCompactList}\small\item\em \textbackslash{} brief get the sprite for the given piece \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_af2ad4d5ba418e5b07a72a30b9124921e}{void \hyperlink{class_game_logic_af2ad4d5ba418e5b07a72a30b9124921e}{Interpolate\-Swap} (int x, int y, int x2, int y2, bool swapback)}\label{class_game_logic_af2ad4d5ba418e5b07a72a30b9124921e}
+
+\begin{DoxyCompactList}\small\item\em swap interpolation. \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a5f2ea322ec3419c6c620a650589210d9}{bool \hyperlink{class_game_logic_a5f2ea322ec3419c6c620a650589210d9}{Swap\-Piece} (unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2)}\label{class_game_logic_a5f2ea322ec3419c6c620a650589210d9}
+
+\begin{DoxyCompactList}\small\item\em swap logic piece and sprite tile \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_acfed5f014ab0f823871753c7701fae35}{void \hyperlink{class_game_logic_acfed5f014ab0f823871753c7701fae35}{Swap\-Piece\-To\-Top} (const \hyperlink{struct_game_board_1_1_match_result}{Game\-Board\-::\-Match\-Result} \&res)}\label{class_game_logic_acfed5f014ab0f823871753c7701fae35}
+
+\begin{DoxyCompactList}\small\item\em swap pieces to top. \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a6cb3f1a381c549578b6684adfe1c9867}{float \hyperlink{class_game_logic_a6cb3f1a381c549578b6684adfe1c9867}{Get\-Game\-Time} () const }\label{class_game_logic_a6cb3f1a381c549578b6684adfe1c9867}
+
+\begin{DoxyCompactList}\small\item\em return the game tim \end{DoxyCompactList}\item 
+void \hyperlink{class_game_logic_a10cbf1ec8dbd9835d80fd98b9136cf33}{Shift\-Column} (int col, int from, int howmuch)
+\begin{DoxyCompactList}\small\item\em shift a single columns starting from , count times. \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a0053fdc7f9159d5ad5114189211addc8}{void \hyperlink{class_game_logic_a0053fdc7f9159d5ad5114189211addc8}{Animate\-Column} (int col, int from, int howmuch)}\label{class_game_logic_a0053fdc7f9159d5ad5114189211addc8}
+
+\begin{DoxyCompactList}\small\item\em shift a single columns starting from , count times. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_game_logic_ae8535585155f4488c4ce58cdb4d77055}{static void \hyperlink{class_game_logic_ae8535585155f4488c4ce58cdb4d77055}{Time\-Is\-Over} (void $\ast$p\-Game\-Logic\-Instance)}\label{class_game_logic_ae8535585155f4488c4ce58cdb4d77055}
+
+\begin{DoxyCompactList}\small\item\em callback for the timer. Fire a game over when done. \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a67fff8c0f9cf826eb6c7c70c3e804593}{static void \hyperlink{class_game_logic_a67fff8c0f9cf826eb6c7c70c3e804593}{Interpolate\-Swap\-Callback} (void $\ast$p\-Data)}\label{class_game_logic_a67fff8c0f9cf826eb6c7c70c3e804593}
+
+\begin{DoxyCompactList}\small\item\em callback called when the animation of a swap finished. It calls the logic that handle the fade out transition of all the resulting matches for the movement \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a9643f952b7f862da7a5b42e47350c721}{static void \hyperlink{class_game_logic_a9643f952b7f862da7a5b42e47350c721}{Interpolate\-Fade\-Callback} (void $\ast$p\-Data)}\label{class_game_logic_a9643f952b7f862da7a5b42e47350c721}
+
+\begin{DoxyCompactList}\small\item\em callback called when the fadeout transition is finished. it contains the logic that handle the fall down of the pieces above. \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a0dc9058dbcf18db3a155d03b08291003}{static void \hyperlink{class_game_logic_a0dc9058dbcf18db3a155d03b08291003}{Column\-Interpolation\-Finished} (void $\ast$p\-Data)}\label{class_game_logic_a0dc9058dbcf18db3a155d03b08291003}
+
+\begin{DoxyCompactList}\small\item\em callback called when the column are finished to fall. it commits the board changes to the logical board. \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_ad8d6680d714c1c1072a6ae39a7d2d442}{static void \hyperlink{class_game_logic_ad8d6680d714c1c1072a6ae39a7d2d442}{Interpolate\-Check\-Callback} (void $\ast$p\-Data)}\label{class_game_logic_ad8d6680d714c1c1072a6ae39a7d2d442}
+
+\begin{DoxyCompactList}\small\item\em callback used during combo chian check \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a9f965a420651cc37aa083a46338212f5}{static void \hyperlink{class_game_logic_a9f965a420651cc37aa083a46338212f5}{Animation\-Finished} (void $\ast$p\-Data)}\label{class_game_logic_a9f965a420651cc37aa083a46338212f5}
+
+\begin{DoxyCompactList}\small\item\em callback used when one of the intrtpolators is finished \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_game_logic_a4e5991971dc3affa427858376f9174a4}{static const int \hyperlink{class_game_logic_a4e5991971dc3affa427858376f9174a4}{k\-Board\-Row} = 8}\label{class_game_logic_a4e5991971dc3affa427858376f9174a4}
+
+\begin{DoxyCompactList}\small\item\em the game grid row \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a427fe7e0d0b8b87e65640ed8f8ea6da5}{static const int \hyperlink{class_game_logic_a427fe7e0d0b8b87e65640ed8f8ea6da5}{k\-Board\-Col} = 8}\label{class_game_logic_a427fe7e0d0b8b87e65640ed8f8ea6da5}
+
+\begin{DoxyCompactList}\small\item\em the game grid Col \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a2fe8e94be59184e0d1e83a1e9818b950}{static const int \hyperlink{class_game_logic_a2fe8e94be59184e0d1e83a1e9818b950}{kgrid\-H\-Spacing} = 38}\label{class_game_logic_a2fe8e94be59184e0d1e83a1e9818b950}
+
+\begin{DoxyCompactList}\small\item\em horizontal spacing between pieces \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_ace636afc8c2e32f0f0965e6ecdbc8ded}{static const int \hyperlink{class_game_logic_ace636afc8c2e32f0f0965e6ecdbc8ded}{kgrid\-V\-Spacing} = 38}\label{class_game_logic_ace636afc8c2e32f0f0965e6ecdbc8ded}
+
+\begin{DoxyCompactList}\small\item\em vertical spacing between pieces \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_aa984d85731caea8b8715064ab7bf3b1c}{static const int \hyperlink{class_game_logic_aa984d85731caea8b8715064ab7bf3b1c}{kx\-Offet\-Board} = 340}\label{class_game_logic_aa984d85731caea8b8715064ab7bf3b1c}
+
+\begin{DoxyCompactList}\small\item\em this is the point in witch the diamonds have to be drawn at first \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a445192abb3823d599b82bfcf3dfbb5d7}{static const int \hyperlink{class_game_logic_a445192abb3823d599b82bfcf3dfbb5d7}{ky\-Offet\-Board} = 120}\label{class_game_logic_a445192abb3823d599b82bfcf3dfbb5d7}
+
+\begin{DoxyCompactList}\small\item\em this is the point in witch the diamonds have to be drawn at first \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_aec36c5794e269f0bbd979409d74194cc}{static const int \hyperlink{class_game_logic_aec36c5794e269f0bbd979409d74194cc}{k\-Screen\-W} =755}\label{class_game_logic_aec36c5794e269f0bbd979409d74194cc}
+
+\begin{DoxyCompactList}\small\item\em screen width \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a74f7aab4dc99c914d72d14c35d0eb24f}{static const int \hyperlink{class_game_logic_a74f7aab4dc99c914d72d14c35d0eb24f}{k\-Screen\-H} = 600}\label{class_game_logic_a74f7aab4dc99c914d72d14c35d0eb24f}
+
+\begin{DoxyCompactList}\small\item\em screen Height \end{DoxyCompactList}\item 
+static const float \hyperlink{class_game_logic_ab012d83d151e25539f366c50f84a3f44}{kf\-Falling\-Animation\-Time} = 1.\-0f
+\begin{DoxyCompactList}\small\item\em how long the falling animation have to last \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a25a4db48aca72c27a7e028521850f933}{static const Interpolator\-Function \hyperlink{class_game_logic_a25a4db48aca72c27a7e028521850f933}{kpf\-Falling\-Interpolation} = Elastic\-In}\label{class_game_logic_a25a4db48aca72c27a7e028521850f933}
+
+\begin{DoxyCompactList}\small\item\em what kind of interpolation should have to use. \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a7cd0389af780922db8dc76b41bee5252}{static const float \hyperlink{class_game_logic_a7cd0389af780922db8dc76b41bee5252}{kf\-Swap\-Animation\-Time} = 0.\-5f}\label{class_game_logic_a7cd0389af780922db8dc76b41bee5252}
+
+\begin{DoxyCompactList}\small\item\em time and funcion to use when we want to swap \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_ab0790d9452ea70c3eb3f4f5ed9d2eec4}{static const Interpolator\-Function \hyperlink{class_game_logic_ab0790d9452ea70c3eb3f4f5ed9d2eec4}{kpf\-Swap\-Interpolation} = Quad\-In\-Out}\label{class_game_logic_ab0790d9452ea70c3eb3f4f5ed9d2eec4}
+
+\begin{DoxyCompactList}\small\item\em time and funcion to use when we want to swap \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a08b1bcf9b587669f2160c8de0d6d7986}{static const float \hyperlink{class_game_logic_a08b1bcf9b587669f2160c8de0d6d7986}{kf\-Fading\-Animation\-Time} = 0.\-5f}\label{class_game_logic_a08b1bcf9b587669f2160c8de0d6d7986}
+
+\begin{DoxyCompactList}\small\item\em animation time for fading. \end{DoxyCompactList}\item 
+\hypertarget{class_game_logic_a0205e435991f8f16c2e5b632977f7b2a}{static const float \hyperlink{class_game_logic_a0205e435991f8f16c2e5b632977f7b2a}{k\-Game\-Time} = 60.\-0f}\label{class_game_logic_a0205e435991f8f16c2e5b632977f7b2a}
+
+\begin{DoxyCompactList}\small\item\em time over \end{DoxyCompactList}\item 
+static const Interpolator\-Function \hyperlink{class_game_logic_a6b27e54d39f952b2eea17fcc5ab73df6}{kpf\-Fading\-Interpolation} = Cube\-In\-Out
+\begin{DoxyCompactList}\small\item\em callback for the timer. Fire a game over when done. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{class_game_logic_a6519d0f7ccd9424c3595cfc3a63b5e8e}{\index{Game\-Logic@{Game\-Logic}!Apply\-Gravity@{Apply\-Gravity}}
+\index{Apply\-Gravity@{Apply\-Gravity}!GameLogic@{Game\-Logic}}
+\subsubsection[{Apply\-Gravity}]{\setlength{\rightskip}{0pt plus 5cm}void Game\-Logic\-::\-Apply\-Gravity (
+\begin{DoxyParamCaption}
+\item[{{\bf Game\-Board\-::\-Match\-Result} $\ast$}]{p\-Res, }
+\item[{bool}]{useanim = {\ttfamily true}}
+\end{DoxyParamCaption}
+)}}\label{class_game_logic_a6519d0f7ccd9424c3595cfc3a63b5e8e}
+
+
+make the object fall 
+
+to shift the game board columns in the proper way we need to check starting form \hypertarget{class_game_logic_a10cbf1ec8dbd9835d80fd98b9136cf33}{\index{Game\-Logic@{Game\-Logic}!Shift\-Column@{Shift\-Column}}
+\index{Shift\-Column@{Shift\-Column}!GameLogic@{Game\-Logic}}
+\subsubsection[{Shift\-Column}]{\setlength{\rightskip}{0pt plus 5cm}void Game\-Logic\-::\-Shift\-Column (
+\begin{DoxyParamCaption}
+\item[{int}]{col, }
+\item[{int}]{from, }
+\item[{int}]{howmuch}
+\end{DoxyParamCaption}
+)}}\label{class_game_logic_a10cbf1ec8dbd9835d80fd98b9136cf33}
+
+
+shift a single columns starting from , count times. 
+
+shift a single column , we start from (from -\/ howmuch) and we swap the boar pieces till (frorm) 
+
+\subsection{Member Data Documentation}
+\hypertarget{class_game_logic_ab012d83d151e25539f366c50f84a3f44}{\index{Game\-Logic@{Game\-Logic}!kf\-Falling\-Animation\-Time@{kf\-Falling\-Animation\-Time}}
+\index{kf\-Falling\-Animation\-Time@{kf\-Falling\-Animation\-Time}!GameLogic@{Game\-Logic}}
+\subsubsection[{kf\-Falling\-Animation\-Time}]{\setlength{\rightskip}{0pt plus 5cm}const float Game\-Logic\-::kf\-Falling\-Animation\-Time = 1.\-0f\hspace{0.3cm}{\ttfamily [static]}}}\label{class_game_logic_ab012d83d151e25539f366c50f84a3f44}
+
+
+how long the falling animation have to last 
+
+initialize animations constant \hypertarget{class_game_logic_a6b27e54d39f952b2eea17fcc5ab73df6}{\index{Game\-Logic@{Game\-Logic}!kpf\-Fading\-Interpolation@{kpf\-Fading\-Interpolation}}
+\index{kpf\-Fading\-Interpolation@{kpf\-Fading\-Interpolation}!GameLogic@{Game\-Logic}}
+\subsubsection[{kpf\-Fading\-Interpolation}]{\setlength{\rightskip}{0pt plus 5cm}const Interpolator\-Function Game\-Logic\-::kpf\-Fading\-Interpolation = Cube\-In\-Out\hspace{0.3cm}{\ttfamily [static]}}}\label{class_game_logic_a6b27e54d39f952b2eea17fcc5ab73df6}
+
+
+callback for the timer. Fire a game over when done. 
+
+interpolato for fading 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+Game\-Logic.\-h\item 
+Game\-Logic.\-cpp\end{DoxyCompactItemize}

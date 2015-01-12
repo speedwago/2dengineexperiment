@@ -1,0 +1,1042 @@
+#include "GameLogic.h"
+#include "Utils.h"
+#include <math.h>
+#include <stdlib.h>
+#include "common.h"
+#include <time.h>
+
+#include <string.h>
+#include  "Box2d/Box2d.h"
+#include "GameRenderer.h"
+/// \brief structors
+using namespace speed;
+
+static UserData m_assets[NUM] = 	{
+    UserData(BACKGROUND) ,
+    UserData(BACKGROUND2),
+
+    UserData(BODY),
+   UserData( BODY1),
+    UserData(BORDER1),
+    UserData(BORDER2),
+   UserData( BORDER3),
+   UserData( BTNRESTART),
+    UserData(BTNSTART),
+   UserData( CHAINM),
+   UserData( CHAINR),
+   UserData( DIE0),
+    UserData(DIE1),
+   UserData( DIE2),
+   UserData( DIE3),
+   UserData( DIE4),
+   UserData( HIT0),
+  UserData(  HIT1),
+    UserData(STRUGGLE0),
+    UserData(STRUGGLE1),
+    UserData(STRUGGLE2),
+   UserData( CHAR_SWIM),
+   UserData( CHAR_SWIM1),
+    UserData(CHAR_SWIM2),
+   UserData( CHAR_SWIM3),
+   UserData( CHAR_SWIM4),
+    UserData(CHAR_SWIM5),
+   UserData( CHAR_SWIM6),
+   UserData( CHAR_SWIM7),
+  UserData(  AIR_BG),
+   UserData(  AIR_FILL),
+   UserData( AIR_TEXT),
+   UserData( AIR_END),
+   UserData( AIR_LOGO),
+   UserData( ANCHOR),
+   UserData( BARELL0),
+   UserData( BARELL1),
+   UserData( CASE0),
+   UserData( CASE1),
+   UserData( CASE2),
+   UserData( CRATE0),
+   UserData( CRATE1),
+   UserData( PANEL0),
+   UserData( POPELLER),
+};
+
+
+static float fUpforce =200.0;
+/// initialize animations constant
+const float GameLogic::kfFallingAnimationTime = 1.0f;
+const InterpolatorFunction GameLogic::kpfFallingInterpolation = ElasticIn;
+
+const float GameLogic::kfSwapAnimationTime = 0.5f;
+const InterpolatorFunction GameLogic::kpfSwapInterpolation = QuadInOut;
+
+const float GameLogic::kfFadingAnimationTime = 0.5f;
+const InterpolatorFunction GameLogic::kpfFadingInterpolation = CubeInOut;
+
+const float GameLogic::kGameTime = 60.0f;
+
+
+static GameLogic* s_pGame;
+
+
+class MyContactListener : public b2ContactListener
+{
+public:
+    GameLogic *m_pGameLogic;
+    void BeginContact(b2Contact* contact) {
+
+        //check if fixture A was a ball
+        UserData* pB1=NULL;
+        UserData* pB2=NULL;
+        void* bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
+		 void* bodyUserData2 = contact->GetFixtureB()->GetBody()->GetUserData();
+        if ( bodyUserData )
+        {
+
+            pB1 =static_cast<UserData*>( bodyUserData );
+			pB2 =static_cast<UserData*>( bodyUserData2 );
+			if (( pB1->m_id != BORDER1 && pB1->m_id != BORDER2 && pB1->m_id != BORDER3 && pB1->m_id != CHAR_SWIM)&&pB2 &&pB2->m_id == CHAR_SWIM)
+			{
+				b2Filter fil;
+				fil.maskBits = ~GameLogic::PLAYER_GROUP;
+				contact->GetFixtureA()->SetFilterData(fil);
+				if (s_pGame->m_PlayerState != GameLogic::DEAD)
+				{
+					s_pGame->m_PlayerState = GameLogic::HIT;
+					audio::playSFX("data/human_pain.wav");
+					s_pGame->frameid =0;
+				}
+			}
+            static_cast<UserData*>( bodyUserData )->startContact();
+        }
+
+        //check if fixture B was a ball
+        bodyUserData = contact->GetFixtureB()->GetBody()->GetUserData();
+		bodyUserData2 = contact->GetFixtureA()->GetBody()->GetUserData();
+        if ( bodyUserData )
+        {
+			pB1 =static_cast<UserData*>( bodyUserData2 );
+            pB2 =static_cast<UserData*>( bodyUserData );
+			if ( (pB2->m_id != BORDER1 && pB2->m_id != BORDER2 && pB2->m_id != BORDER3 && pB2->m_id != CHAR_SWIM) && pB1&& pB1->m_id == CHAR_SWIM)
+			{
+				b2Filter fil;
+				fil.maskBits = ~GameLogic::PLAYER_GROUP;
+				contact->GetFixtureB()->SetFilterData(fil);
+				if (s_pGame->m_PlayerState != GameLogic::DEAD)
+				{
+					s_pGame->m_PlayerState = GameLogic::HIT;
+					audio::playSFX("data/human_pain.wav");
+					s_pGame->frameid =0;
+				}
+
+			}
+
+            static_cast<UserData*>( bodyUserData )->startContact();
+        }
+
+
+
+    }
+
+    void EndContact(b2Contact* contact) {
+
+        //check if fixture A was a ball
+        void* bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
+        if ( bodyUserData )
+            static_cast<UserData*>( bodyUserData )->endContact();
+
+        //check if fixture B was a ball
+        bodyUserData = contact->GetFixtureB()->GetBody()->GetUserData();
+        if ( bodyUserData )
+            static_cast<UserData*>( bodyUserData )->endContact();
+
+    }
+};
+
+class QueryCallback : public b2QueryCallback
+{
+public:
+	QueryCallback(const b2Vec2& point)
+	{
+		m_point = point;
+		m_fixture = NULL;
+	}
+
+	bool ReportFixture(b2Fixture* fixture)
+	{
+		b2Body* body = fixture->GetBody();
+		//if (body->GetType() == b2_dynamicBody)
+		{
+			bool inside = fixture->TestPoint(m_point);
+			if (inside)
+			{
+				m_fixture = fixture;
+
+				// We are done, terminate the query.
+				return false;
+			}
+		}
+
+		// Continue the query.
+		return true;
+	}
+
+	b2Vec2 m_point;
+	b2Fixture* m_fixture;
+};
+
+
+GameLogic::GameLogic()
+	:
+
+m_State(INTRO)
+,m_GameOVerTriggered(false)
+,gravity(0,-1)
+,world(gravity)
+,m_Char(CHAR_SWIM)
+,m_Ground(BORDER1)
+{
+	world.SetGravity(gravity);
+}
+
+
+b2Body* bodyChar;
+float32 timeStep = 1.0f / 60.0f;
+int32 velocityIterations = 6;
+int32 positionIterations = 2;
+
+
+
+
+
+MyContactListener myContactListenerInstance;
+
+
+void GameLogic::Init()
+{
+    frameid=0;
+	hitcount =0;
+	s_pGame = this;
+    myContactListenerInstance.m_pGameLogic = this;
+    m_assets[POPELLER].m_fInitialRad = M_PI/2;
+	m_assets[CHAINM].m_fInitialRad = M_PI/2;
+	m_PlayerState = SWIM;
+	// random seed for release builds
+#ifndef _DEBUG
+	srand (time(NULL));
+#endif
+
+
+	// init sprites assets ans positionning in the grid
+	float fXstart = GameLogic::kgridHSpacing / 2.0;
+	float fYstart = 0.0f;
+	// inittiliaze the time over counter
+	m_Timer.Init(kGameTime,NORMAL,GameLogic::TimeIsOver, NULL);
+    m_ObjectGenerator.Init(1.0,LOOP,GameLogic::CreateRandom,NULL);
+    m_animTimer.Init(0.15,LOOP,GameLogic::IncrementFrame,NULL);
+	m_State = INTRO;
+	m_GameOVerTriggered = false;
+	m_currentIndex = 0;
+	LastMouseY= 0;
+	LastMouseX = 0;
+
+
+	m_PhysicsRopeObjects.DeleteAll();
+	m_PhysicsObjects.DeleteAll();
+
+	while (world.GetBodyCount())
+	{
+		b2Body *pBodyList = world.GetBodyList();
+		world.DestroyBody(pBodyList) ;
+		
+	}
+	// Define the gravity vector.
+
+
+	// Define the ground body.
+	b2BodyDef groundBodyDef;
+	b2Vec2 c2 = collision::GetBox2dPos(b2Vec2(0.0f,(float)GameLogic::kScreenH));
+	groundBodyDef.position.Set(c2.x, c2.y);
+	
+
+	// Call the body factory which allocates memory for the ground body
+	// from a pool and creates the ground box shape (also from a pool).
+	// The body is also added to the world.
+	b2Body* groundBody = world.CreateBody(&groundBodyDef);
+
+	// Define the ground box shape.
+	b2PolygonShape groundBox;
+
+	b2Vec2 c3 = collision::GetBox2dPos(b2Vec2(300,500));
+	// The extents are the half-widths of the box.
+	groundBox.SetAsBox(100.0, 0.01);
+
+	// Add the ground fixture to the ground body.
+	
+	b2Fixture* pGroundFixuture= groundBody->CreateFixture(&groundBox, 0.0f);
+	b2Filter filter;
+	filter.categoryBits = GROUND_GROUP;
+	filter.maskBits = MASK_GRUND;
+	pGroundFixuture->SetFilterData(filter);
+
+    // left wall
+    {
+
+        b2BodyDef groundBodyDef;
+        b2Vec2 c2 = collision::GetBox2dPos(b2Vec2(1,0));
+        groundBodyDef.position.Set(c2.x, c2.y);
+
+        // Call the body factory which allocates memory for the ground body
+        // from a pool and creates the ground box shape (also from a pool).
+        // The body is also added to the world.
+        b2Body* groundBody = world.CreateBody(&groundBodyDef);
+
+        // Define the ground box shape.
+        b2PolygonShape groundBox;
+
+
+        // The extents are the half-widths of the box.
+        groundBox.SetAsBox(0.01 ,1000.0);
+
+        // Add the ground fixture to the ground body.
+
+        groundBody->CreateFixture(&groundBox, 0.0f);
+
+
+    }
+
+    // right wall
+    {
+
+        b2BodyDef groundBodyDef;
+        b2Vec2 c2 = collision::GetBox2dPos(b2Vec2(kScreenW-1,0));
+        groundBodyDef.position.Set(c2.x, c2.y);
+
+        // Call the body factory which allocates memory for the ground body
+        // from a pool and creates the ground box shape (also from a pool).
+        // The body is also added to the world.
+        b2Body* groundBody = world.CreateBody(&groundBodyDef);
+        groundBody->SetUserData(&m_Ground);
+        //groundBody->
+
+        // Define the ground box shape.
+        b2PolygonShape groundBox;
+
+
+        // The extents are the half-widths of the box.
+        groundBox.SetAsBox(0.01 ,1000.0);
+        // Add the ground fixture to the ground body.
+
+        groundBody->CreateFixture(&groundBox, 0.0f);
+
+
+    }
+	// Define the dynamic body. We set its position and call the body factory.
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	b2Vec2 c = collision::GetBox2dPos(b2Vec2(kScreenW/2,kScreenH-150));
+	bodyDef.position.Set(c.x,c.y);
+	bodyChar = world.CreateBody(&bodyDef);
+    bodyChar->SetUserData(&m_Char);
+
+    //in FooTest constructor
+    world.SetContactListener(&myContactListenerInstance);
+
+	// Define another box shape for our dynamic body.
+	b2PolygonShape dynamicBox;
+  b2Vec2 c5 = collision::GetBox2dWH(b2Vec2(35,35));
+	dynamicBox.SetAsBox(c5.x, c5.y);
+
+	// Define the dynamic body fixture.
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &dynamicBox;
+
+	// Set the box density to be non-zero, so it will be dynamic.
+	fixtureDef.density = 1.0f;
+
+	// Override the default friction.
+	fixtureDef.friction = 0.3f;
+
+	// Add the shape to the body.
+	b2Fixture *pCharFix =bodyChar->CreateFixture(&fixtureDef);
+	b2Filter filterChar;
+	filterChar.categoryBits = PLAYER_GROUP;
+	filterChar.maskBits = -1;
+	pCharFix->SetFilterData(filterChar);
+    cameraOffSet = 0;
+	groundOffSet =0;
+	gameoverOffset = 0;
+	bodyYpos = .0;
+	lastbodyYpos = .0;
+	m_State = INTRO;
+}
+
+void GameLogic::CreateBox(float xScreen, float yScreen)
+{
+	// Define the dynamic body. We set its position and call the body factory.
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	b2Vec2 c = collision::GetBox2dPos(b2Vec2(xScreen,yScreen));
+	bodyDef.position.Set(c.x,c.y);
+	b2Body *pbody = world.CreateBody(&bodyDef);
+
+	// Define another box shape for our dynamic body.
+	b2PolygonShape dynamicBox;
+	b2Vec2 c5 = collision::GetBox2dPos(b2Vec2(35,35));
+	dynamicBox.SetAsBox(1.0, 1.0);
+
+	// Define the dynamic body fixture.
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &dynamicBox;
+
+	// Set the box density to be non-zero, so it will be dynamic.
+	fixtureDef.density = 1.0f;
+
+	// Override the default friction.
+	fixtureDef.friction = 0.3f;
+
+	// Add the shape to the body.
+	pbody->CreateFixture(&fixtureDef);
+	
+	PhyObject* p = new PhyObject;
+	p->pBody = pbody;
+	m_PhysicsObjects.InsertHead(p);
+}
+
+b2Body* GameLogic::CreateCircleStatic(float xScreen, float yScreen)
+{
+	// Define the dynamic body. We set its position and call the body factory.
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_staticBody;
+	b2Vec2 c = collision::GetBox2dPos(b2Vec2(xScreen,yScreen));
+	bodyDef.position.Set(c.x,c.y);
+	b2Body *pbody = world.CreateBody(&bodyDef);
+
+	// Define another box shape for our dynamic body.
+	b2CircleShape dynamicBox;
+	b2Vec2 c5 = collision::GetBox2dPos(b2Vec2(35,35));
+	dynamicBox.m_radius = 0.2;
+
+	// Define the dynamic body fixture.
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &dynamicBox;
+
+	// Set the box density to be non-zero, so it will be dynamic.
+	fixtureDef.density = 1.0f;
+
+	// Override the default friction.
+	fixtureDef.friction = 0.3f;
+
+	// Add the shape to the body.
+	pbody->CreateFixture(&fixtureDef);
+
+	PhyObject* p = new PhyObject;
+	p->pBody = pbody;
+	m_pLastCreated = pbody;
+	m_PhysicsObjects.InsertHead(p);
+    return pbody;
+}
+b2Body* GameLogic::CreateCircle(float xScreen, float yScreen)
+{
+	// Define the dynamic body. We set its position and call the body factory.
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	b2Vec2 c = collision::GetBox2dPos(b2Vec2(xScreen,yScreen));
+	bodyDef.position.Set(c.x,c.y);
+	b2Body *pbody = world.CreateBody(&bodyDef);
+
+	// Define another box shape for our dynamic body.
+	b2CircleShape dynamicBox;
+	b2Vec2 c5 = collision::GetBox2dPos(b2Vec2(35,35));
+	dynamicBox.m_radius = 0.2;
+
+	// Define the dynamic body fixture.
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &dynamicBox;
+
+	// Set the box density to be non-zero, so it will be dynamic.
+	fixtureDef.density = 1.0f;
+
+	// Override the default friction.
+	fixtureDef.friction = 0.3f;
+
+	// Add the shape to the body.
+	pbody->CreateFixture(&fixtureDef);
+
+	PhyObject* p = new PhyObject;
+	p->pBody = pbody;
+	m_PhysicsObjects.InsertHead(p);
+
+    return pbody;
+	//CreateRope(*pbody, *m_pLastCreated);
+}
+
+
+b2Body* GameLogic::CreateBarrel(float xScreen, float yScreen)
+{
+    // Define the dynamic body. We set its position and call the body factory.
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    b2Vec2 c = collision::GetBox2dPos(b2Vec2(xScreen,yScreen));
+    bodyDef.position.Set(c.x,c.y);
+    b2Body *pbody = world.CreateBody(&bodyDef);
+
+    // Define another box shape for our dynamic body.
+    b2CircleShape dynamicBox;
+    b2Vec2 c5 = collision::GetBox2dPos(b2Vec2(35,35));
+    dynamicBox.m_radius = 0.2;
+
+    // Define the dynamic body fixture.
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &dynamicBox;
+
+    // Set the box density to be non-zero, so it will be dynamic.
+    fixtureDef.density = 1.0f;
+
+    // Override the default friction.
+    fixtureDef.friction = 0.3f;
+
+    // Add the shape to the body.
+    b2Fixture *pFix =pbody->CreateFixture(&fixtureDef);
+    pbody->ApplyAngularImpulse(0.0001,true);
+					b2Filter fil;
+				fil.maskBits = GameLogic::PLAYER_GROUP;
+				pFix->SetFilterData(fil);
+    pbody->SetUserData(&m_assets[BARELL0]);
+
+    PhyObject* p = new PhyObject;
+    p->pBody = pbody;
+    m_PhysicsObjects.InsertHead(p);
+
+    return pbody;
+    //CreateRope(*pbody, *m_pLastCreated);
+}
+
+b2Body* GameLogic::CreateAnchor(float xScreen, float yScreen)
+{
+    // Define the dynamic body. We set its position and call the body factory.
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    b2Vec2 c = collision::GetBox2dPos(b2Vec2(xScreen,yScreen));
+    bodyDef.position.Set(c.x,c.y);
+    b2Body *pbody = world.CreateBody(&bodyDef);
+
+    // Define another box shape for our dynamic body.
+    b2CircleShape dynamicBox;
+    b2Vec2 c5 = collision::GetBox2dPos(b2Vec2(35,35));
+    dynamicBox.m_radius = 0.4;
+
+    // Define the dynamic body fixture.
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &dynamicBox;
+
+    // Set the box density to be non-zero, so it will be dynamic.
+    fixtureDef.density = 1.0f;
+
+    // Override the default friction.
+    fixtureDef.friction = 0.1f;
+
+    // Add the shape to the body.
+    b2Fixture *pFix =pbody->CreateFixture(&fixtureDef);
+    pbody->ApplyAngularImpulse(0.0001,true);
+					b2Filter fil;
+				fil.maskBits = GameLogic::PLAYER_GROUP;
+				pFix->SetFilterData(fil);
+    pbody->SetUserData(&m_assets[ANCHOR]);
+    PhyObject* p = new PhyObject;
+    p->pBody = pbody;
+    m_PhysicsObjects.InsertHead(p);
+
+    return pbody;
+    //CreateRope(*pbody, *m_pLastCreated);
+}
+
+b2Body* GameLogic::CreatePropeller(float xScreen, float yScreen)
+{
+    // Define the dynamic body. We set its position and call the body factory.
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    b2Vec2 c = collision::GetBox2dPos(b2Vec2(xScreen,yScreen));
+    bodyDef.position.Set(c.x,c.y);
+    b2Body *pbody = world.CreateBody(&bodyDef);
+
+    // Define another box shape for our dynamic body.
+    b2CircleShape dynamicBox;
+    b2Vec2 c5 = collision::GetBox2dPos(b2Vec2(35,35));
+    dynamicBox.m_radius = 0.5;
+
+    // Define the dynamic body fixture.
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &dynamicBox;
+
+    // Set the box density to be non-zero, so it will be dynamic.
+    fixtureDef.density = 1.0f;
+
+    // Override the default friction.
+    fixtureDef.friction = 0.1f;
+
+    b2Fixture *pFix =pbody->CreateFixture(&fixtureDef);
+    pbody->ApplyAngularImpulse(0.0001,true);
+					b2Filter fil;
+				fil.maskBits = GameLogic::PLAYER_GROUP;
+				pFix->SetFilterData(fil);
+    //pbody->ApplyAngularImpulse(0.0001,true);
+    pbody->SetUserData(&m_assets[POPELLER]);
+    PhyObject* p = new PhyObject;
+    p->pBody = pbody;
+    m_PhysicsObjects.InsertHead(p);
+
+    return pbody;
+}
+
+b2Body* GameLogic::CreateCrate(float xScreen, float yScreen)
+{
+    // Define the dynamic body. We set its position and call the body factory.
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    b2Vec2 c = collision::GetBox2dPos(b2Vec2(xScreen,yScreen));
+    bodyDef.position.Set(c.x,c.y);
+    b2Body *pbody = world.CreateBody(&bodyDef);
+
+    // Define another box shape for our dynamic body.
+    b2CircleShape dynamicBox;
+    b2Vec2 c5 = collision::GetBox2dPos(b2Vec2(35,35));
+    dynamicBox.m_radius = 0.2;
+
+    // Define the dynamic body fixture.
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &dynamicBox;
+
+    // Set the box density to be non-zero, so it will be dynamic.
+    fixtureDef.density = 1.0f;
+
+    // Override the default friction.
+    fixtureDef.friction = 0.1f;
+
+    // Add the shape to the body.
+    b2Fixture *pFix =pbody->CreateFixture(&fixtureDef);
+    pbody->ApplyAngularImpulse(0.0001,true);
+	b2Filter fil;
+	fil.maskBits = GameLogic::PLAYER_GROUP;
+	pFix->SetFilterData(fil);
+    pbody->SetUserData(&m_assets[CRATE0]);
+    PhyObject* p = new PhyObject;
+    p->pBody = pbody;
+    m_PhysicsObjects.InsertHead(p);
+    return pbody;
+}
+b2Body* GameLogic::CreatePanel(float xScreen, float yScreen)
+{
+    // Define the dynamic body. We set its position and call the body factory.
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    b2Vec2 c = collision::GetBox2dPos(b2Vec2(xScreen,yScreen));
+    bodyDef.position.Set(c.x,c.y);
+    b2Body *pbody = world.CreateBody(&bodyDef);
+
+    // Define another box shape for our dynamic body.
+    b2CircleShape dynamicBox;
+    b2Vec2 c5 = collision::GetBox2dPos(b2Vec2(35,35));
+    dynamicBox.m_radius = 0.2;
+
+    // Define the dynamic body fixture.
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &dynamicBox;
+
+    // Set the box density to be non-zero, so it will be dynamic.
+    fixtureDef.density = 1.0f;
+
+    // Override the default friction.
+    fixtureDef.friction = 0.1f;
+
+    // Add the shape to the body.
+    b2Fixture *pFix =pbody->CreateFixture(&fixtureDef);
+    pbody->ApplyAngularImpulse(0.0001,true);
+					b2Filter fil;
+				fil.maskBits = GameLogic::PLAYER_GROUP;
+				pFix->SetFilterData(fil);
+    pbody->SetUserData(&m_assets[PANEL0]);
+    PhyObject* p = new PhyObject;
+    p->pBody = pbody;
+    m_PhysicsObjects.InsertHead(p);
+    return pbody;
+}
+b2Body* GameLogic::CreateBody(float xScreen, float yScreen)
+{
+    // Define the dynamic body. We set its position and call the body factory.
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    b2Vec2 c = collision::GetBox2dPos(b2Vec2(xScreen,yScreen));
+    bodyDef.position.Set(c.x,c.y);
+    b2Body *pbody = world.CreateBody(&bodyDef);
+
+    // Define another box shape for our dynamic body.
+    b2CircleShape dynamicBox;
+    b2Vec2 c5 = collision::GetBox2dPos(b2Vec2(35,35));
+    dynamicBox.m_radius = 0.4;
+
+    // Define the dynamic body fixture.
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &dynamicBox;
+
+    // Set the box density to be non-zero, so it will be dynamic.
+    fixtureDef.density = 1.0f;
+
+    // Override the default friction.
+    fixtureDef.friction = 0.1f;
+
+    // Add the shape to the body.
+    b2Fixture *pFix =pbody->CreateFixture(&fixtureDef);
+    pbody->ApplyAngularImpulse(0.0001,true);
+					b2Filter fil;
+				fil.maskBits = GameLogic::PLAYER_GROUP;
+				pFix->SetFilterData(fil);
+    pbody->SetUserData(&m_assets[BODY]);
+    PhyObject* p = new PhyObject;
+    p->pBody = pbody;
+    m_PhysicsObjects.InsertHead(p);
+	
+    return pbody;
+    //CreateRope(*pbody, *m_pLastCreated);
+}
+b2Joint* m_rope;
+void GameLogic::CreateRope(b2Body &bstart, b2Body &bend)
+{
+
+	b2RevoluteJointDef jd;
+	jd.collideConnected = false;
+	b2RopeJointDef m_ropeDef;
+	const int32 N = 10;
+	//const float32 y = bend.GetPosition().y;
+	b2Vec2 dir  = bend.GetPosition() - bstart.GetPosition();
+	float fLen = dir.Length();
+	dir = b2Vec2(dir.x/float(N),dir.y/float(N));
+	b2PolygonShape shape;
+	b2FixtureDef fd;
+
+	shape.SetAsBox(fLen/N, 0.125f);
+
+	
+	fd.shape = &shape;
+	fd.density = 10.0f;
+	fd.friction = 0.1f;
+	fd.filter.categoryBits = 0x0001;
+	fd.filter.maskBits = 0xFFFF & ~0x0002;
+	m_ropeDef.localAnchorA.Set(bstart.GetPosition().x, bstart.GetPosition().y);
+	m_ropeDef.bodyA = &bstart;
+	b2Body* prevBody = &bstart;
+	for (int32 i = 0; i < N; ++i)
+	{
+		b2BodyDef bd;
+		bd.type = b2_dynamicBody;
+		bd.position.Set(bstart.GetPosition().x + dir.x*i, bstart.GetPosition().y + dir.y*i);
+
+
+		b2Body* body = world.CreateBody(&bd);
+
+		PhyObject* po = new PhyObject;
+        body->SetUserData(&m_assets[CHAINM]);
+		po->pBody = body;
+		m_PhysicsObjects.InsertHead(po);
+		m_PhysicsRopeObjects.InsertHead(po);
+
+		body->CreateFixture(&fd);
+
+		b2Vec2 anchor(bstart.GetPosition().x+dir.x*i, bstart.GetPosition().y+dir.y*i);
+		jd.Initialize(prevBody, body, anchor);
+		world.CreateJoint(&jd);
+
+		prevBody = body;
+	}
+	
+	b2Vec2 anchor(bend.GetPosition().x, bend.GetPosition().y);
+	jd.Initialize(prevBody, &bend, anchor);
+	world.CreateJoint(&jd);
+
+	m_ropeDef.localAnchorB.Set(bend.GetPosition().x,bend.GetPosition().y);
+
+	float32 extraLength = 0.01f;
+	m_ropeDef.maxLength = fLen  + extraLength;
+	m_ropeDef.bodyB = &bend;
+//	m_ropeDef.bodyA = &bend;
+	 m_rope = world.CreateJoint(&m_ropeDef);
+
+}
+
+void GameLogic::PickObject(b2Vec2 &wordpos)
+{
+	b2Vec2 pos = collision::GetBox2dPos(wordpos);
+	b2AABB aabb;
+	b2Vec2 d;
+	d.Set(0.01f, 0.01f);
+	aabb.lowerBound = pos - d;
+	aabb.upperBound = pos + d;
+
+	// Query the world for overlapping shapes.
+	QueryCallback callback(pos);
+	world.QueryAABB(&callback, aabb);
+
+	if (callback.m_fixture)
+	{
+		m_pLastCreated = callback.m_fixture->GetBody();
+		//CreateRope(*body, *m_pLastCreated);
+		CreateRope(*m_pLastCreated, *bodyChar);
+	}
+}
+
+void GameLogic::Shutdown()
+{
+}
+
+GameLogic::~GameLogic()
+{
+}
+void GameLogic::UpdateBox2d(float dt)
+{
+
+    UserData *d =(UserData *)bodyChar->GetUserData(); 
+    if (m_PlayerState == SWIM && (!d->m_contacting) && collision::GetScreenPos(bodyChar->GetPosition()).y > 100.0)  
+         bodyChar->ApplyForceToCenter(b2Vec2(0,5.8),true);
+	world.Step(1.0/60.0, velocityIterations, positionIterations);
+
+	// Now print the position and angle of the body.
+	b2Vec2 position = bodyChar->GetPosition();
+	float32 angle = bodyChar->GetAngle();
+	
+}
+void GameLogic::Update(float dt)
+{
+	UpdateUserInput();
+   if (m_State == GameLogic::INTRO)
+	   return;
+
+    UpdateInterpolators(dt);
+
+	UpdateTimers(dt);
+
+}
+
+
+void GameLogic::UpdateUserInput()
+{
+    
+   if (m_State == INTRO)
+   {
+	   	int xMouse, yMouse;
+		bool bClicked = io::GetMouseLClickPosition(&xMouse, &yMouse);
+		if (bClicked)
+		{
+			Init();
+			m_State = PLAY;
+			return;
+		}
+	   return;
+   }
+    bodyYpos= collision::GetScreenPos(bodyChar->GetPosition()).y;
+	if (cameraOffSet >=GameLogic::kScreenH)
+		cameraOffSet =0;
+
+    cameraOffSet += 0.55;//bodyYpos-lastbodyYpos;
+	groundOffSet+= 0.55;
+	int x3,y3;
+	io::GetMousePosition(&x3,&y3);
+	if (x3-LastMouseX <0&& m_PlayerState == SWIM )
+    {
+
+        bodyChar->ApplyForce(b2Vec2(-fUpforce/10,0),bodyChar->GetPosition(),true);
+    }
+    bool b2 =io::IsRightPressed();
+    if (x3-LastMouseX>0&& m_PlayerState == SWIM )
+    {
+        bodyChar->ApplyForce(b2Vec2(fUpforce/10,0),bodyChar->GetPosition(),true);
+    }
+
+	LastMouseX =x3;
+#if 0
+    bool b =io::IsLeftPressed();
+    if (b && m_PlayerState == SWIM )
+    {
+
+        bodyChar->ApplyForce(b2Vec2(-fUpforce,0),bodyChar->GetPosition(),true);
+    }
+    bool b2 =io::IsRightPressed();
+    if (b2&& m_PlayerState == SWIM )
+    {
+        bodyChar->ApplyForce(b2Vec2(fUpforce,0),bodyChar->GetPosition(),true);
+    }
+
+#endif
+    //int xMouse2, yMouse2;
+
+	if (m_State == GAME_OVER)
+	{
+		 if (-200+gameoverOffset>= GameLogic::kScreenH/2)
+		 {
+		// if game over restart when click
+		int xMouse, yMouse;
+		bool bClicked = io::GetMouseLClickPosition(&xMouse, &yMouse);
+		if (bClicked)
+		{
+			Init();
+			m_State = PLAY;
+			return;
+		}
+		}
+	}
+
+	//if (m_State != WAIT_FOR_USER)
+		//return;
+
+	if (m_GameOVerTriggered)
+	{
+		m_State = GAME_OVER;
+		m_PlayerState = DEAD;
+		audio::playSFX("data/human_die.wav");
+		b2Filter filterChar;
+		filterChar.categoryBits = NONE_GROUP;
+		filterChar.maskBits = -1;
+		bodyChar->GetFixtureList()->SetFilterData(filterChar);
+		s_pGame->frameid =0;
+		// if game over restart when click
+		int xMouse, yMouse;
+		bool bClicked = io::GetMouseLClickPosition(&xMouse, &yMouse);
+		if (bClicked)
+		{
+//			Init();
+			return;
+		}
+	}
+
+
+	int xMouse, yMouse;
+	bool bClicked = io::GetMouseLClickPosition(&xMouse, &yMouse);
+	// check first if we clicked in a valid game area
+
+
+}
+
+void GameLogic::IncrementFrame(void * pGameLogicInstance)
+{
+	switch (s_pGame->m_PlayerState)
+	{
+	case SWIM :
+    s_pGame->frameid =(s_pGame->frameid+1) % 8;
+	break;
+	case HIT :
+		s_pGame->frameid=0;
+		s_pGame->hitcount++;
+		if (s_pGame->hitcount > 4)
+		{
+			s_pGame->frameid =1;
+			//s_pGame->m_PlayerState = SWIM;
+		}
+
+		if (s_pGame->hitcount > 8)
+		{
+			s_pGame->hitcount =0;
+			s_pGame->m_PlayerState = SWIM;
+		}
+
+
+		break;
+
+	case DEAD :
+		s_pGame->frameid=0;
+		s_pGame->hitcount++;
+		if (s_pGame->hitcount > 4)
+		{
+			s_pGame->frameid =1;
+			//s_pGame->m_PlayerState = SWIM;
+		}
+
+		if (s_pGame->hitcount > 8)
+		{
+			s_pGame->frameid =1;
+		}
+
+		if (s_pGame->hitcount > 12)
+		{
+			s_pGame->frameid =2;
+		}
+		if (s_pGame->hitcount > 16)
+		{
+			s_pGame->frameid =3;
+		}
+
+
+		break;
+
+	}
+}
+void GameLogic::CreateRandom(void * pGameLogicInstance)
+{
+	if (s_pGame->m_State == INTRO)
+		return;
+    int what = rand() %7;
+    switch (what)
+    {
+    case 0:
+		s_pGame->CreateBarrel((float)(rand() % kScreenW), (float)-200);
+        break;
+    case 1:
+		s_pGame->CreateAnchor((float)(rand() % kScreenW), (float)-200);
+        break;
+
+    case 2:
+		s_pGame->CreateBody((float)(rand() % kScreenW), (float)-200);
+        break;
+    case 3:
+		s_pGame->CreatePropeller((float)(rand() % kScreenW), (float)-200);
+        break;
+
+    case 4:
+		s_pGame->CreateCrate((float)(rand() % kScreenW), (float)-200);
+        break;
+    case 5:
+		s_pGame->CreatePanel((float)(rand() % kScreenW), (float)-200);
+        break;
+
+    case 6:
+        {
+			b2Body* p1 = s_pGame->CreateBarrel((float)(rand() % kScreenW / 2), (float)-200);
+			b2Body* p12 = s_pGame->CreateAnchor((float)(rand() % kScreenW / 2), (float)-200);
+
+        }
+        break;
+
+
+    default:
+		s_pGame->CreatePropeller((float)(rand() % kScreenW), (float)-200);
+        break;
+    }
+
+
+    
+}
+
+void GameLogic::UpdateInterpolators(float dt)
+{
+}
+
+void GameLogic::UpdateTimers(float dt)
+{
+		m_CallbackTimer.Update(dt);
+		m_Timer.Update(dt);
+        m_ObjectGenerator.Update(dt);
+        m_animTimer.Update(dt);
+}
+
+float GameLogic::GetGameTime() const
+{
+	return m_Timer.GetRemainingTime();
+}
+
+
+GameLogic::GameState GameLogic::GetCurrentState() const
+{
+	return m_State;
+}
+
+void GameLogic::TimeIsOver(void * pGameLogicInstance)
+{
+	s_pGame->m_GameOVerTriggered = true;
+	KLOG("time over called!\n");
+}

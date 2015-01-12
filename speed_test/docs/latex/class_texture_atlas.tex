@@ -1,0 +1,57 @@
+\hypertarget{class_texture_atlas}{\section{Texture\-Atlas Class Reference}
+\label{class_texture_atlas}\index{Texture\-Atlas@{Texture\-Atlas}}
+}
+
+
+\hyperlink{class_texture_atlas}{Texture\-Atlas} handle the textures and their instances , keeping track of them and upload them to the G\-P\-U.  
+
+
+
+
+{\ttfamily \#include $<$Texture\-Atlas.\-h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_texture_atlas_ad38d24295c6a728256392a9f2bcdf8e7}{\hyperlink{class_texture_atlas_ad38d24295c6a728256392a9f2bcdf8e7}{Texture\-Atlas} ()}\label{class_texture_atlas_ad38d24295c6a728256392a9f2bcdf8e7}
+
+\begin{DoxyCompactList}\small\item\em structor \end{DoxyCompactList}\item 
+\hypertarget{class_texture_atlas_aed47504c1211eacc876b643e766365d1}{\hyperlink{class_texture_atlas_aed47504c1211eacc876b643e766365d1}{$\sim$\-Texture\-Atlas} ()}\label{class_texture_atlas_aed47504c1211eacc876b643e766365d1}
+
+\begin{DoxyCompactList}\small\item\em brief \end{DoxyCompactList}\item 
+\hypertarget{class_texture_atlas_adb753ad8899a9e1045c5cfd84808b3de}{void \hyperlink{class_texture_atlas_adb753ad8899a9e1045c5cfd84808b3de}{Add\-Instance} (const \hyperlink{structking_1_1renderer_1_1_vert}{king\-::renderer\-::\-Vert} $\ast$p\-Vert, unsigned int numpsprite)}\label{class_texture_atlas_adb753ad8899a9e1045c5cfd84808b3de}
+
+\begin{DoxyCompactList}\small\item\em add a texture instance to the render queue. \end{DoxyCompactList}\item 
+\hypertarget{class_texture_atlas_a3502f5541a5eee4dd40016570e3d6d22}{void \hyperlink{class_texture_atlas_a3502f5541a5eee4dd40016570e3d6d22}{Add\-Instance} (unsigned int region, float x, float y, float fa\-Alpha)}\label{class_texture_atlas_a3502f5541a5eee4dd40016570e3d6d22}
+
+\begin{DoxyCompactList}\small\item\em add one istance taken from the given region \end{DoxyCompactList}\item 
+\hypertarget{class_texture_atlas_a81b2cb15b666a318de3a89532d8bc69c}{void \hyperlink{class_texture_atlas_a81b2cb15b666a318de3a89532d8bc69c}{Add\-Region} (float u0, float v0, float u1, float v1, int w, int h)}\label{class_texture_atlas_a81b2cb15b666a318de3a89532d8bc69c}
+
+\begin{DoxyCompactList}\small\item\em add a texture region to atlas \end{DoxyCompactList}\item 
+\hypertarget{class_texture_atlas_a251b652b2fd3a5902ae1bf83d3697429}{void \hyperlink{class_texture_atlas_a251b652b2fd3a5902ae1bf83d3697429}{Load\-Texture} (const char $\ast$p\-Data)}\label{class_texture_atlas_a251b652b2fd3a5902ae1bf83d3697429}
+
+\begin{DoxyCompactList}\small\item\em load textture \end{DoxyCompactList}\item 
+\hypertarget{class_texture_atlas_ad52320227c97485cf77ffa62c167b428}{void \hyperlink{class_texture_atlas_ad52320227c97485cf77ffa62c167b428}{Draw} (unsigned int shader)}\label{class_texture_atlas_ad52320227c97485cf77ffa62c167b428}
+
+\begin{DoxyCompactList}\small\item\em issue draw \end{DoxyCompactList}\item 
+\hypertarget{class_texture_atlas_ab864214908340929d817bbe38d96a828}{void \hyperlink{class_texture_atlas_ab864214908340929d817bbe38d96a828}{Flush} ()}\label{class_texture_atlas_ab864214908340929d817bbe38d96a828}
+
+\begin{DoxyCompactList}\small\item\em the data \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_texture_atlas_a2f7a634462064e7715e58eb15fb13bdd}{static const int \hyperlink{class_texture_atlas_a2f7a634462064e7715e58eb15fb13bdd}{k\-Max\-Instances} = 1024}\label{class_texture_atlas_a2f7a634462064e7715e58eb15fb13bdd}
+
+\begin{DoxyCompactList}\small\item\em brief max numer of instance supported \end{DoxyCompactList}\item 
+\hypertarget{class_texture_atlas_a94887a34f2e8a2b3ffa794e3561619d4}{static const int \hyperlink{class_texture_atlas_a94887a34f2e8a2b3ffa794e3561619d4}{k\-Max\-Sprite\-Per\-Atlas} = 256}\label{class_texture_atlas_a94887a34f2e8a2b3ffa794e3561619d4}
+
+\begin{DoxyCompactList}\small\item\em define the maximon number of sprite per atlas \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\hyperlink{class_texture_atlas}{Texture\-Atlas} handle the textures and their instances , keeping track of them and upload them to the G\-P\-U. 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+Texture\-Atlas.\-h\item 
+Texture\-Atlas.\-cpp\end{DoxyCompactItemize}

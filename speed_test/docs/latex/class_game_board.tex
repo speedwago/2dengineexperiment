@@ -1,0 +1,93 @@
+\hypertarget{class_game_board}{\section{Game\-Board Class Reference}
+\label{class_game_board}\index{Game\-Board@{Game\-Board}}
+}
+
+
+this class handle the game board from a logical point of view  
+
+
+
+
+{\ttfamily \#include $<$Game\-Board.\-h$>$}
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_game_board_1_1_match_result}{Match\-Result}
+\begin{DoxyCompactList}\small\item\em query result data structure \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries Direction} \{ {\bfseries R\-O\-W}, 
+{\bfseries C\-O\-L}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_game_board_afed551e9c127df283a47e8124b1318a4}{\hyperlink{class_game_board_afed551e9c127df283a47e8124b1318a4}{Game\-Board} (unsigned int num\-Row, unsigned int num\-Col)}\label{class_game_board_afed551e9c127df283a47e8124b1318a4}
+
+\begin{DoxyCompactList}\small\item\em create a board with the give size \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_a48e19b4953c87cc5eea1f9152d09499e}{\hyperlink{class_game_board_a48e19b4953c87cc5eea1f9152d09499e}{$\sim$\-Game\-Board} ()}\label{class_game_board_a48e19b4953c87cc5eea1f9152d09499e}
+
+\begin{DoxyCompactList}\small\item\em destructor \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_aba09f382ac8efd967505bbcbe93ba8fc}{void \hyperlink{class_game_board_aba09f382ac8efd967505bbcbe93ba8fc}{Set\-Piece} (unsigned int x, unsigned int y, const \hyperlink{class_game_piece}{Game\-Piece} \&piece)}\label{class_game_board_aba09f382ac8efd967505bbcbe93ba8fc}
+
+\begin{DoxyCompactList}\small\item\em set piece in the given position \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_a8ac26b97976d4fc0b80f74486eab45a1}{bool \hyperlink{class_game_board_a8ac26b97976d4fc0b80f74486eab45a1}{Swap\-Piece} (unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2)}\label{class_game_board_a8ac26b97976d4fc0b80f74486eab45a1}
+
+\begin{DoxyCompactList}\small\item\em Swap the piece with a neighbor. \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_abc9f68a6a81a3ec70d07224e9309b67f}{void \hyperlink{class_game_board_abc9f68a6a81a3ec70d07224e9309b67f}{Set\-Region\-As\-Valid} (unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2)}\label{class_game_board_abc9f68a6a81a3ec70d07224e9309b67f}
+
+\begin{DoxyCompactList}\small\item\em set the board rectangle as valid \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_a543bd5dbfa8b27bac058dd1aa8f4b40f}{void \hyperlink{class_game_board_a543bd5dbfa8b27bac058dd1aa8f4b40f}{Fill\-Valid\-Region\-With\-Colors} ()}\label{class_game_board_a543bd5dbfa8b27bac058dd1aa8f4b40f}
+
+\begin{DoxyCompactList}\small\item\em fill regions with random colors \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_a345d5c2d3492cc61a9e67b8e85c4be9d}{void \hyperlink{class_game_board_a345d5c2d3492cc61a9e67b8e85c4be9d}{Get\-Grid\-Size} (int \&x, int \&y) const }\label{class_game_board_a345d5c2d3492cc61a9e67b8e85c4be9d}
+
+\begin{DoxyCompactList}\small\item\em get the grid size \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_ae28369d503321f0f2cd444a87aa661a3}{const \hyperlink{class_game_piece}{Game\-Piece} \& \hyperlink{class_game_board_ae28369d503321f0f2cd444a87aa661a3}{Get\-Piece} (unsigned int x, unsigned int y) const }\label{class_game_board_ae28369d503321f0f2cd444a87aa661a3}
+
+\begin{DoxyCompactList}\small\item\em get the piece \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_a14316a2356cc7ed2e0c7b89d250591b2}{\hyperlink{class_game_piece}{Game\-Piece} \& \hyperlink{class_game_board_a14316a2356cc7ed2e0c7b89d250591b2}{Get\-Piece} (unsigned int x, unsigned int y)}\label{class_game_board_a14316a2356cc7ed2e0c7b89d250591b2}
+
+\begin{DoxyCompactList}\small\item\em non const get piece \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_a5c0cb4b99b238d5eb818e67a5db65601}{void \hyperlink{class_game_board_a5c0cb4b99b238d5eb818e67a5db65601}{Find\-Match} (int x, int y, \hyperlink{struct_game_board_1_1_match_result}{Match\-Result} $\ast$p\-Res, bool init\-Result=true)}\label{class_game_board_a5c0cb4b99b238d5eb818e67a5db65601}
+
+\begin{DoxyCompactList}\small\item\em fill regions with random colors \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_ab0efd3dff450be2ab0ba740808236acc}{void \hyperlink{class_game_board_ab0efd3dff450be2ab0ba740808236acc}{Mark\-As\-Invalid} (const \hyperlink{struct_game_board_1_1_match_result}{Match\-Result} \&r\-Res)}\label{class_game_board_ab0efd3dff450be2ab0ba740808236acc}
+
+\begin{DoxyCompactList}\small\item\em mark result as invalid on the grid \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_a634cfcaf3d787ff29822bc6fec88816e}{void \hyperlink{class_game_board_a634cfcaf3d787ff29822bc6fec88816e}{Swap} (unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2)}\label{class_game_board_a634cfcaf3d787ff29822bc6fec88816e}
+
+\begin{DoxyCompactList}\small\item\em internal swap utility function \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_game_board_a94e82179e6a2b7a176f69e245b1d40fb}{\hyperlink{class_game_piece}{Game\-Piece} \hyperlink{class_game_board_a94e82179e6a2b7a176f69e245b1d40fb}{m\-\_\-a\-Board\-Pieces} \mbox{[}\hyperlink{class_game_board_ab579dd1e4a379675c58778d1da128e74}{k\-Max\-Row}\mbox{]}\mbox{[}\hyperlink{class_game_board_a898b0f017577f1384d9c58a04b392bf3}{k\-Max\-Col}\mbox{]}}\label{class_game_board_a94e82179e6a2b7a176f69e245b1d40fb}
+
+\begin{DoxyCompactList}\small\item\em the game grid \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{class_game_board_ab579dd1e4a379675c58778d1da128e74}{static const int \hyperlink{class_game_board_ab579dd1e4a379675c58778d1da128e74}{k\-Max\-Row} = 64}\label{class_game_board_ab579dd1e4a379675c58778d1da128e74}
+
+\begin{DoxyCompactList}\small\item\em maximum number of row in a board \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_a898b0f017577f1384d9c58a04b392bf3}{static const int \hyperlink{class_game_board_a898b0f017577f1384d9c58a04b392bf3}{k\-Max\-Col} = 64}\label{class_game_board_a898b0f017577f1384d9c58a04b392bf3}
+
+\begin{DoxyCompactList}\small\item\em maximum number of col in a board \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_acb2db0ae9e546a6527d4f9a26a927751}{static const int \hyperlink{class_game_board_acb2db0ae9e546a6527d4f9a26a927751}{k\-Min\-Color\-To\-Match} = 3}\label{class_game_board_acb2db0ae9e546a6527d4f9a26a927751}
+
+\begin{DoxyCompactList}\small\item\em \textbackslash{} num color to match \end{DoxyCompactList}\item 
+\hypertarget{class_game_board_a79252b40dfc63b61defdfbce1b8de9d9}{static const int {\bfseries k\-Max\-Res} = 128}\label{class_game_board_a79252b40dfc63b61defdfbce1b8de9d9}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+this class handle the game board from a logical point of view 
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+Game\-Board.\-h\item 
+Game\-Board.\-cpp\end{DoxyCompactItemize}
